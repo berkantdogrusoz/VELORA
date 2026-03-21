@@ -1,5 +1,5 @@
 export function buildSystemPrompt(context?: { currentCode?: string }): string {
-  const base = `You are Velora, an expert web developer AI. You create stunning, professional, production-ready websites.
+  const base = `You are ÉlanNoire, an expert web developer AI. You create stunning, professional, production-ready websites.
 
 ## Rules
 - Generate a SINGLE complete HTML file with inline CSS and JavaScript

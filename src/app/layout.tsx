@@ -21,10 +21,51 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Velora - AI Web Builder",
+  title: "ÉlanNoire — AI Web Builder | Build Websites with Intelligence",
   description:
-    "Build stunning websites with AI. Just describe what you want and Velora creates it instantly.",
-  keywords: ["AI", "web builder", "website generator", "no-code", "Velora"],
+    "Build stunning, professional websites with AI. Describe your vision and ÉlanNoire creates it instantly. No code required. 3D support, live preview, one-click deploy.",
+  keywords: [
+    "AI web builder",
+    "website generator",
+    "AI website maker",
+    "no-code website builder",
+    "ÉlanNoire",
+    "ElanNoire",
+    "build website with AI",
+    "prompt to website",
+    "AI design tool",
+    "web builder 2026",
+  ],
+  metadataBase: new URL("https://elannoire.site"),
+  openGraph: {
+    title: "ÉlanNoire — AI Web Builder",
+    description:
+      "Build stunning websites with AI. Describe your vision, deploy in minutes.",
+    url: "https://elannoire.site",
+    siteName: "ÉlanNoire",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ÉlanNoire — AI Web Builder",
+    description:
+      "Build stunning websites with AI. Describe your vision, deploy in minutes.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://elannoire.site",
+  },
 };
 
 export default function RootLayout({

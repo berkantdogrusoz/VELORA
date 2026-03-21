@@ -88,11 +88,13 @@ export default function Home() {
         {/* Navbar */}
         <nav className="fixed top-0 w-full z-50 bg-obsidian/60 backdrop-blur-2xl border-b border-gold/[0.08]">
           <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-gold font-semibold tracking-[0.2em] text-sm uppercase">
-                Velora
+            <div className="flex items-center gap-2">
+              <span
+                className="text-gold font-semibold tracking-[0.08em] text-sm"
+                style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+              >
+                Élan<span className="text-foreground/90">Noire</span>
               </span>
-              <span className="text-gold-muted text-[10px] tracking-widest">.ai</span>
             </div>
             <div className="hidden md:flex items-center gap-10">
               <a href="#platform" className="mono-text text-[11px] text-gold-muted hover:text-gold transition-colors">
@@ -131,7 +133,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-10 mono-text text-[11px] leading-relaxed text-gold-muted max-w-lg tracking-wider">
-                SYSTEM STATUS: ONLINE. Velora AI integrates hyper-scaling
+                SYSTEM STATUS: ONLINE. ÉlanNoire integrates hyper-scaling
                 conversational intelligence into web creation. No human
                 intervention required.
               </p>
@@ -232,7 +234,7 @@ export default function Home() {
                 className="text-lg text-foreground/70 italic leading-relaxed"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
               >
-                &ldquo;Velora reduced our landing page development time from 2 weeks
+                &ldquo;ÉlanNoire reduced our landing page development time from 2 weeks
                 to 15 minutes. The AI understands design intent at a level
                 I&apos;ve never seen before.&rdquo;
               </p>
@@ -302,14 +304,14 @@ export default function Home() {
                   <div className="w-2 h-2 rounded-full bg-gold/10" />
                 </div>
                 <span className="mono-text text-[9px] text-gold-muted/50 ml-4">
-                  velora.ai/builder
+                  elannoire.site/builder
                 </span>
               </div>
               <div className="flex h-[280px]">
                 <div className="w-2/5 border-r border-gold/[0.06] p-4 flex flex-col gap-3">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-3 h-3 text-gold/60" />
-                    <span className="mono-text text-[9px] text-gold-muted/60">VELORA AI</span>
+                    <span className="mono-text text-[9px] text-gold-muted/60">ÉLANNOIRE AI</span>
                   </div>
                   <div className="bg-gold/[0.03] border border-gold/[0.08] p-3 text-[10px] text-foreground/50 font-mono leading-relaxed">
                     &quot;Create a luxury brand landing page with obsidian texture
@@ -457,7 +459,7 @@ export default function Home() {
           <div className="h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
           <div className="max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
             <span className="mono-text text-[9px] tracking-[0.2em] text-gold-muted/40">
-              VELORA.AI
+              ÉLANNOIRE
             </span>
             <div className="flex items-center gap-6">
               <a href="#" className="mono-text text-[9px] tracking-wider text-gold-muted/30 hover:text-gold-muted/60 transition-colors">

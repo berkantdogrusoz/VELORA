@@ -8,7 +8,7 @@ export const templates: Template[] = [
     icon: '🚀',
     category: 'landing',
     starterPrompt:
-      'Build a modern, stunning landing page for a SaaS product called "Velora". Include a hero section with gradient background, feature cards with icons, pricing table with 3 tiers, testimonials section, and a footer. Use a purple/blue color scheme with smooth animations.',
+      'Build a modern, stunning landing page for a SaaS product called "ÉlanNoire". Include a hero section with gradient background, feature cards with icons, pricing table with 3 tiers, testimonials section, and a footer. Use a purple/blue color scheme with smooth animations.',
   },
   {
     id: 'portfolio',

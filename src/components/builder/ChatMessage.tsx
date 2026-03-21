@@ -19,7 +19,7 @@ export function ChatMessage({ message }: { message: Message }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium text-muted mb-1">
-          {isUser ? 'Sen' : 'Velora AI'}
+          {isUser ? 'Sen' : 'ÉlanNoire AI'}
         </p>
         <div
           className={`text-sm leading-relaxed ${

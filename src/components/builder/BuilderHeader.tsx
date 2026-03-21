@@ -18,7 +18,7 @@ export function BuilderHeader() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'velora-site.html'
+    a.download = 'elannoire-site.html'
     a.click()
     URL.revokeObjectURL(url)
     toast.success('Site indirildi!')
@@ -36,7 +36,7 @@ export function BuilderHeader() {
         <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent to-blue-500 flex items-center justify-center">
           <Sparkles className="w-4 h-4 text-white" />
         </div>
-        <span className="font-semibold text-sm tracking-tight">Velora</span>
+        <span className="font-semibold text-sm tracking-tight">ÉlanNoire</span>
         <span className="text-[10px] text-muted bg-card-hover px-1.5 py-0.5 rounded-full font-medium">
           BETA
         </span>
