@@ -120,8 +120,8 @@ export function PromptInput() {
   }
 
   return (
-    <div className="border-t border-border p-3">
-      <div className="flex items-end gap-2 bg-card rounded-xl border border-border p-2 focus-within:border-accent/50 transition-colors">
+    <div className="border-t border-gold/[0.08] p-3">
+      <div className="flex items-end gap-2 bg-obsidian-light/50 rounded-lg border border-gold/[0.1] p-2 focus-within:border-gold/[0.25] transition-colors">
         <textarea
           ref={textareaRef}
           value={input}
@@ -134,21 +134,21 @@ export function PromptInput() {
           }
           disabled={isGenerating}
           rows={1}
-          className="flex-1 bg-transparent text-sm resize-none outline-none placeholder:text-muted disabled:opacity-50 max-h-[200px] py-1.5 px-2"
+          className="flex-1 bg-transparent text-sm resize-none outline-none placeholder:text-gold-muted/30 text-foreground/90 disabled:opacity-50 max-h-[200px] py-1.5 px-2"
         />
         <button
           onClick={handleSubmit}
           disabled={!input.trim() || isGenerating}
-          className="shrink-0 w-8 h-8 rounded-lg bg-accent hover:bg-accent/80 disabled:opacity-30 disabled:hover:bg-accent flex items-center justify-center transition-all"
+          className="shrink-0 w-8 h-8 rounded-lg bg-gold/[0.15] hover:bg-gold/[0.3] border border-gold/[0.2] disabled:opacity-30 disabled:hover:bg-gold/[0.15] flex items-center justify-center transition-all"
         >
           {isGenerating ? (
-            <Loader2 className="w-4 h-4 text-white animate-spin" />
+            <Loader2 className="w-4 h-4 text-gold animate-spin" />
           ) : (
-            <Send className="w-4 h-4 text-white" />
+            <Send className="w-4 h-4 text-gold" />
           )}
         </button>
       </div>
-      <p className="text-[10px] text-muted mt-1.5 px-1">
+      <p className="text-[10px] text-gold-muted/30 mt-1.5 px-1 mono-text tracking-wider">
         Enter ile gönder · Shift+Enter ile yeni satır
       </p>
     </div>

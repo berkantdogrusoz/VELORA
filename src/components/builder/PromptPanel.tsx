@@ -19,7 +19,7 @@ export function PromptPanel() {
   const hasMessages = messages.length > 0
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full bg-obsidian">
       {!hasMessages ? (
         <div className="flex-1 overflow-y-auto p-4">
           <TemplateSelector />

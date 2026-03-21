@@ -7,7 +7,7 @@ export function TabBar() {
   const { activeTab, setActiveTab, deviceView, setDeviceView } = useUIStore()
 
   return (
-    <div className="h-10 bg-card border-b border-border flex items-center justify-between px-2 shrink-0">
+    <div className="h-10 bg-obsidian border-b border-gold/[0.08] flex items-center justify-between px-2 shrink-0">
       {/* Tab buttons */}
       <div className="flex items-center gap-0.5">
         <TabButton
@@ -62,10 +62,10 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors mono-text tracking-wider ${
         active
-          ? 'bg-accent/15 text-accent-light'
-          : 'text-muted hover:text-foreground hover:bg-card-hover'
+          ? 'bg-gold/[0.1] text-gold border border-gold/[0.15]'
+          : 'text-gold-muted/40 hover:text-gold/60 hover:bg-gold/[0.05]'
       }`}
     >
       {icon}
@@ -88,8 +88,8 @@ function DeviceButton({
       onClick={onClick}
       className={`p-1.5 rounded-md transition-colors ${
         active
-          ? 'text-accent-light bg-accent/15'
-          : 'text-muted hover:text-foreground hover:bg-card-hover'
+          ? 'text-gold bg-gold/[0.1]'
+          : 'text-gold-muted/30 hover:text-gold/50 hover:bg-gold/[0.05]'
       }`}
     >
       {icon}
