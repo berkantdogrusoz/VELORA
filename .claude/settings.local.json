@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:/Users/berka/OneDrive/Masaüstü/velora-app/node_modules/next/dist/docs -type f -name *.md -o -name *.txt -o -name *.json)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "Bash(node -e \"const m = require\\(''react-resizable-panels''\\); console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(node -e \"const m = require\\(''ai''\\); console.log\\(typeof m.streamText\\)\")",
+      "Bash(node -e \"const m = require\\(''react-resizable-panels''\\); const g = m.Group; console.log\\(typeof g\\); console.log\\(g.toString\\(\\).slice\\(0, 500\\)\\)\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls \"C:/Users/berka/OneDrive/Masaüstü/velora-app/node_modules/.bin/next\"*)"
+    ]
+  }
+}
