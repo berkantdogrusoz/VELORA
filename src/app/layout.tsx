@@ -66,6 +66,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://elannoire.site",
   },
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
