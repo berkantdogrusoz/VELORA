@@ -1,10 +1,12 @@
 'use client'
 
+import type { ReactNode } from 'react'
+
 /* Real SVG brand logos — monochrome gold style */
 export function BrandLogo({ name, className = '' }: { name: string; className?: string }) {
   const color = 'currentColor'
 
-  const logos: Record<string, JSX.Element> = {
+  const logos: Record<string, ReactNode> = {
     Microsoft: (
       <svg viewBox="0 0 23 23" className={className} fill={color}>
         <path d="M0 0h11v11H0zM12 0h11v11H12zM0 12h11v11H0zM12 12h11v11H12z" />
