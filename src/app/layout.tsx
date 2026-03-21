@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Playfair_Display } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -83,6 +84,27 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <ClerkProvider
+          appearance={{
+            // Dark obsidian theme
+            variables: {
+              colorPrimary: "#c9a84c",
+              colorBackground: "#111113",
+              colorText: "#e8e6e3",
+              colorInputBackground: "#08080a",
+              colorInputText: "#e8e6e3",
+              borderRadius: "0.5rem",
+            },
+            elements: {
+              card: "border border-[rgba(201,168,76,0.15)] shadow-[0_0_30px_rgba(201,168,76,0.05)]",
+              headerTitle: "text-[#c9a84c]",
+              headerSubtitle: "text-[#a09274]",
+              socialButtonsBlockButton: "border-[rgba(201,168,76,0.15)] hover:bg-[rgba(201,168,76,0.08)]",
+              formButtonPrimary: "bg-[#c9a84c] hover:bg-[#d4b65c] text-[#08080a]",
+              footerActionLink: "text-[#c9a84c] hover:text-[#d4b65c]",
+            },
+          }}
+        >
         {children}
         <Toaster
           theme="dark"
@@ -95,6 +117,7 @@ export default function RootLayout({
             },
           }}
         />
+        </ClerkProvider>
       </body>
     </html>
   );

@@ -1,13 +1,27 @@
 'use client'
 
-import { Sparkles, Download, RotateCcw } from 'lucide-react'
+import { Sparkles, Download, RotateCcw, Coins } from 'lucide-react'
+import { UserButton } from '@clerk/nextjs'
 import { useBuilderStore } from '@/store/builder-store'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 export function BuilderHeader() {
-  const { files, reset } = useBuilderStore()
+  const { files, credits, setCredits, reset } = useBuilderStore()
   const hasFiles = Object.keys(files).length > 0
+
+  // Fetch credits on mount
+  useEffect(() => {
+    fetch('/api/credits')
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data.credits === 'number') {
+          setCredits(data.credits)
+        }
+      })
+      .catch(console.error)
+  }, [setCredits])
 
   const handleExport = () => {
     const html = files['index.html']
@@ -48,7 +62,19 @@ export function BuilderHeader() {
         </span>
       </Link>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
+        {/* Credits display */}
+        <Link
+          href="/pricing"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gold/[0.06] border border-gold/[0.1] hover:bg-gold/[0.12] transition-colors"
+        >
+          <Coins className="w-3.5 h-3.5 text-gold/70" />
+          <span className="mono-text text-[11px] text-gold/80 tracking-wider">
+            {credits !== null ? credits : '...'}
+          </span>
+          <span className="text-[9px] text-gold-muted/40 mono-text">CREDITS</span>
+        </Link>
+
         {hasFiles && (
           <>
             <button
@@ -66,6 +92,17 @@ export function BuilderHeader() {
             </button>
           </>
         )}
+
+        {/* User button */}
+        <div className="ml-1">
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: 'w-7 h-7',
+              },
+            }}
+          />
+        </div>
       </div>
     </header>
   )

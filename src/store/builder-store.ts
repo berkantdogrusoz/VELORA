@@ -9,6 +9,7 @@ interface BuilderState {
   activeFile: string
   isGenerating: boolean
   prompt: string
+  credits: number | null
 
   addMessage: (msg: Message) => void
   setFiles: (files: Record<string, string>) => void
@@ -16,6 +17,8 @@ interface BuilderState {
   setActiveFile: (name: string) => void
   setGenerating: (v: boolean) => void
   setPrompt: (v: string) => void
+  setCredits: (n: number) => void
+  decrementCredits: () => void
   reset: () => void
 }
 
@@ -25,6 +28,7 @@ export const useBuilderStore = create<BuilderState>((set) => ({
   activeFile: 'index.html',
   isGenerating: false,
   prompt: '',
+  credits: null,
 
   addMessage: (msg) =>
     set((state) => ({ messages: [...state.messages, msg] })),
@@ -41,6 +45,13 @@ export const useBuilderStore = create<BuilderState>((set) => ({
   setGenerating: (v) => set({ isGenerating: v }),
 
   setPrompt: (v) => set({ prompt: v }),
+
+  setCredits: (n) => set({ credits: n }),
+
+  decrementCredits: () =>
+    set((state) => ({
+      credits: state.credits !== null ? Math.max(0, state.credits - 1) : null,
+    })),
 
   reset: () =>
     set({

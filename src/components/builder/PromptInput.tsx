@@ -19,12 +19,23 @@ export function PromptInput() {
     }
   }, [storePrompt])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const { messages, files, isGenerating, addMessage, setFiles, setGenerating } =
+  const { messages, files, credits, isGenerating, addMessage, setFiles, setGenerating, decrementCredits } =
     useBuilderStore()
 
   const handleSubmit = useCallback(async () => {
     const trimmed = input.trim()
     if (!trimmed || isGenerating) return
+
+    // Check credits before sending
+    if (credits !== null && credits <= 0) {
+      toast.error('Krediniz bitti! Devam etmek için kredi satın alın.', {
+        action: {
+          label: 'Kredi Al',
+          onClick: () => window.location.href = '/pricing',
+        },
+      })
+      return
+    }
 
     // Add user message
     const userMsg = {
@@ -59,8 +70,20 @@ export function PromptInput() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
+        if (response.status === 402) {
+          toast.error('Krediniz bitti! Devam etmek için kredi satın alın.', {
+            action: {
+              label: 'Kredi Al',
+              onClick: () => window.location.href = '/pricing',
+            },
+          })
+          return
+        }
         throw new Error(errorData.error || 'AI isteği başarısız oldu')
       }
+
+      // Deduct credit locally
+      decrementCredits()
 
       const reader = response.body?.getReader()
       if (!reader) throw new Error('Stream okunamadı')

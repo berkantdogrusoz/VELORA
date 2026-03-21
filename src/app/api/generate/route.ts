@@ -1,9 +1,17 @@
 import { streamText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
+import { auth } from '@clerk/nextjs/server'
 import { buildSystemPrompt } from '@/lib/ai/prompt-builder'
+import { deductCredit, logGeneration, getOrCreateUser } from '@/lib/db/credits'
 
 export async function POST(request: Request) {
   try {
+    const { userId } = await auth()
+
+    if (!userId) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { messages, currentCode } = await request.json()
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -13,9 +21,23 @@ export async function POST(request: Request) {
       )
     }
 
+    // Ensure user exists
+    await getOrCreateUser(userId)
+
+    // Check and deduct credits
+    const hasCredits = await deductCredit(userId, 1)
+    if (!hasCredits) {
+      return Response.json(
+        { error: 'Insufficient credits. Please purchase more credits to continue.' },
+        { status: 402 }
+      )
+    }
+
     const systemPrompt = buildSystemPrompt({
       currentCode: currentCode || undefined,
     })
+
+    const lastMessage = messages[messages.length - 1]
 
     const result = streamText({
       model: anthropic('claude-sonnet-4-20250514'),
@@ -26,6 +48,9 @@ export async function POST(request: Request) {
       })),
       maxOutputTokens: 16000,
     })
+
+    // Log the generation
+    logGeneration(userId, lastMessage?.content || '', 1).catch(console.error)
 
     // Return as a plain text stream for easier parsing
     const stream = result.textStream
