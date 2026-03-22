@@ -16,9 +16,19 @@ export default function SignUpPage() {
           </p>
         </div>
         <SignUp
+          fallbackRedirectUrl="/builder"
           appearance={{
             elements: {
               rootBox: 'w-full max-w-md',
+              card: 'bg-[#1a1a1d] border border-[#c9a84c]/10 shadow-2xl',
+              headerTitle: 'text-[#e8e6e3]',
+              headerSubtitle: 'text-[#8a8578]',
+              socialButtonsBlockButton: 'border-[#c9a84c]/10 hover:bg-[#c9a84c]/5 text-[#e8e6e3]',
+              formFieldLabel: 'text-[#8a8578]',
+              formFieldInput: 'bg-[#111113] border-[#c9a84c]/10 text-[#e8e6e3]',
+              formButtonPrimary: 'bg-[#c9a84c] hover:bg-[#d4b65c] text-[#111113]',
+              footerActionLink: 'text-[#c9a84c] hover:text-[#d4b65c]',
+              identityPreviewEditButton: 'text-[#c9a84c]',
             },
           }}
         />

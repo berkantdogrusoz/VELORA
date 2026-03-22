@@ -107,12 +107,20 @@ export default function Home() {
                 Protocol
               </a>
             </div>
-            <Link
-              href="/builder"
-              className="btn-gold-fill px-5 py-2 text-[11px] mono-text tracking-wider"
-            >
-              Start Audit
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/sign-in"
+                className="mono-text text-[11px] text-gold-muted hover:text-gold transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/sign-up"
+                className="btn-gold-fill px-5 py-2 text-[11px] mono-text tracking-wider"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
         </nav>
 
@@ -120,11 +128,11 @@ export default function Home() {
         <div className="flex-1 flex items-center relative z-10">
           <div className="max-w-7xl mx-auto px-8 w-full">
             <div className="max-w-4xl">
-              <h1 className="text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[1.05] tracking-tight text-foreground/90 font-light">
+              <h1 className="text-[clamp(1.8rem,3.5vw,3.5rem)] leading-[1.15] tracking-tight text-foreground/90 font-light">
                 Intelligent experiences meet
               </h1>
               <h1
-                className="text-[clamp(3rem,7vw,7.5rem)] leading-[1] tracking-tight italic text-gold-gradient"
+                className="text-[clamp(2.2rem,4.5vw,5rem)] leading-[1.05] tracking-tight italic text-gold-gradient"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
               >
                 Autonomous
