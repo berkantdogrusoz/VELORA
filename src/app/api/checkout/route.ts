@@ -3,12 +3,11 @@ import { auth } from '@clerk/nextjs/server'
 const LEMON_SQUEEZY_API_KEY = process.env.LEMONSQUEEZY_API_KEY
 const STORE_ID = process.env.LEMONSQUEEZY_STORE_ID
 
-// Map plan names to Lemon Squeezy variant IDs
-// TODO: Update these with actual variant IDs from Lemon Squeezy dashboard
+// Lemon Squeezy variant IDs
 const PLAN_VARIANTS: Record<string, { variantId: string; credits: number }> = {
-  starter: { variantId: process.env.LEMON_VARIANT_STARTER || '', credits: 50 },
-  pro: { variantId: process.env.LEMON_VARIANT_PRO || '', credits: 200 },
-  business: { variantId: process.env.LEMON_VARIANT_BUSINESS || '', credits: 600 },
+  starter: { variantId: '1431299', credits: 50 },
+  pro: { variantId: '1431301', credits: 200 },
+  business: { variantId: '1431303', credits: 600 },
 }
 
 export async function POST(request: Request) {
