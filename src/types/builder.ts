@@ -13,8 +13,8 @@ export interface GeneratedFile {
 
 export interface Template {
   id: string
-  name: string
-  description: string
+  nameKey: string
+  descKey: string
   icon: string
   category: 'landing' | 'portfolio' | '3d' | 'dashboard' | 'ecommerce' | 'blog'
   starterPrompt: string

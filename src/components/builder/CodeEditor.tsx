@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useBuilderStore } from '@/store/builder-store'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n/i18n-context'
 
 const Editor = dynamic(() => import('@monaco-editor/react').then((m) => m.default), {
   ssr: false,
@@ -10,7 +11,7 @@ const Editor = dynamic(() => import('@monaco-editor/react').then((m) => m.defaul
     <div className="flex items-center justify-center h-full bg-obsidian">
       <div className="flex items-center gap-2 text-gold-muted/50 text-sm mono-text tracking-wider">
         <Loader2 className="w-4 h-4 animate-spin text-gold/50" />
-        Editör yükleniyor...
+        Loading editor...
       </div>
     </div>
   ),

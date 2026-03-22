@@ -5,8 +5,10 @@ import { Send, Loader2 } from 'lucide-react'
 import { useBuilderStore } from '@/store/builder-store'
 import { parsePartialVeloraFile } from '@/lib/ai/stream-parser'
 import { toast } from 'sonner'
+import { useTranslation } from '@/lib/i18n/i18n-context'
 
 export function PromptInput() {
+  const { t } = useTranslation()
   const [input, setInput] = useState('')
   const storePrompt = useBuilderStore((s) => s.prompt)
 
@@ -28,9 +30,9 @@ export function PromptInput() {
 
     // Check credits before sending
     if (credits !== null && credits <= 0) {
-      toast.error('Krediniz bitti! Devam etmek için kredi satın alın.', {
+      toast.error(t('builder.noCredits'), {
         action: {
-          label: 'Kredi Al',
+          label: t('builder.getCredits'),
           onClick: () => window.location.href = '/pricing',
         },
       })
@@ -71,22 +73,22 @@ export function PromptInput() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         if (response.status === 402) {
-          toast.error('Krediniz bitti! Devam etmek için kredi satın alın.', {
+          toast.error(t('builder.noCredits'), {
             action: {
-              label: 'Kredi Al',
+              label: t('builder.getCredits'),
               onClick: () => window.location.href = '/pricing',
             },
           })
           return
         }
-        throw new Error(errorData.error || 'AI isteği başarısız oldu')
+        throw new Error(errorData.error || t('builder.aiFailed'))
       }
 
       // Deduct credit locally
       decrementCredits()
 
       const reader = response.body?.getReader()
-      if (!reader) throw new Error('Stream okunamadı')
+      if (!reader) throw new Error(t('builder.streamError'))
 
       const decoder = new TextDecoder()
       let fullText = ''
@@ -114,18 +116,18 @@ export function PromptInput() {
       })
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : 'Bir hata oluştu'
+        error instanceof Error ? error.message : t('builder.errorOccurred')
       )
       addMessage({
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.',
+        content: t('builder.errorMessage'),
         timestamp: Date.now(),
       })
     } finally {
       setGenerating(false)
     }
-  }, [input, isGenerating, messages, files, addMessage, setFiles, setGenerating])
+  }, [input, isGenerating, messages, files, credits, t, addMessage, setFiles, setGenerating, decrementCredits])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -139,12 +141,12 @@ export function PromptInput() {
     // Auto-resize
     const el = e.target
     el.style.height = 'auto'
-    el.style.height = Math.min(el.scrollHeight, 200) + 'px'
+    el.style.height = Math.min(el.scrollHeight, 300) + 'px'
   }
 
   return (
-    <div className="border-t border-gold/[0.1] p-3 relative z-[1]">
-      <div className="flex items-end gap-2 bg-obsidian-light/40 rounded-lg border border-gold/[0.12] p-2 focus-within:border-gold/[0.3] focus-within:shadow-[0_0_15px_rgba(201,168,76,0.06)] transition-all">
+    <div className="border-t border-gold/[0.1] p-4 relative z-[1]">
+      <div className="flex items-end gap-2 bg-obsidian-light/40 rounded-xl border border-gold/[0.12] p-3 focus-within:border-gold/[0.3] focus-within:shadow-[0_0_15px_rgba(201,168,76,0.06)] transition-all">
         <textarea
           ref={textareaRef}
           value={input}
@@ -152,27 +154,27 @@ export function PromptInput() {
           onKeyDown={handleKeyDown}
           placeholder={
             isGenerating
-              ? 'AI çalışıyor...'
-              : 'Hayalinizdeki web sitesini anlatın...'
+              ? t('builder.aiWorking')
+              : t('builder.placeholder')
           }
           disabled={isGenerating}
-          rows={1}
-          className="flex-1 bg-transparent text-sm resize-none outline-none placeholder:text-gold-muted/30 text-foreground/90 disabled:opacity-50 max-h-[200px] py-1.5 px-2"
+          rows={2}
+          className="flex-1 bg-transparent text-base resize-none outline-none placeholder:text-gold-muted/30 text-foreground/90 disabled:opacity-50 max-h-[300px] py-2.5 px-3"
         />
         <button
           onClick={handleSubmit}
           disabled={!input.trim() || isGenerating}
-          className="shrink-0 w-8 h-8 rounded-lg bg-gold/[0.15] hover:bg-gold/[0.3] border border-gold/[0.2] disabled:opacity-30 disabled:hover:bg-gold/[0.15] flex items-center justify-center transition-all"
+          className="shrink-0 w-10 h-10 rounded-lg bg-gold/[0.15] hover:bg-gold/[0.3] border border-gold/[0.2] disabled:opacity-30 disabled:hover:bg-gold/[0.15] flex items-center justify-center transition-all"
         >
           {isGenerating ? (
-            <Loader2 className="w-4 h-4 text-gold animate-spin" />
+            <Loader2 className="w-5 h-5 text-gold animate-spin" />
           ) : (
-            <Send className="w-4 h-4 text-gold" />
+            <Send className="w-5 h-5 text-gold" />
           )}
         </button>
       </div>
       <p className="text-[10px] text-gold-muted/30 mt-1.5 px-1 mono-text tracking-wider">
-        Enter ile gönder · Shift+Enter ile yeni satır
+        {t('builder.sendHint')}
       </p>
     </div>
   )

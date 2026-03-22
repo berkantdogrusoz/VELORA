@@ -2,8 +2,10 @@
 
 import { User, Bot } from 'lucide-react'
 import type { Message } from '@/types/builder'
+import { useTranslation } from '@/lib/i18n/i18n-context'
 
 export function ChatMessage({ message }: { message: Message }) {
+  const { t } = useTranslation()
   const isUser = message.role === 'user'
 
   return (
@@ -19,7 +21,7 @@ export function ChatMessage({ message }: { message: Message }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className={`text-xs font-medium mb-1 mono-text tracking-wider ${isUser ? 'text-gold-muted/50' : 'text-gold/60'}`}>
-          {isUser ? 'SEN' : 'ÉLANNOIRE AI'}
+          {isUser ? t('builder.you') : t('builder.aiLabel')}
         </p>
         <div
           className={`text-sm leading-relaxed ${
@@ -31,7 +33,7 @@ export function ChatMessage({ message }: { message: Message }) {
           ) : (
             <p className="whitespace-pre-wrap">
               {message.content.includes('<velora-file')
-                ? 'Site oluşturuldu! Sağ panelde önizlemeyi görebilirsiniz.'
+                ? t('builder.siteCreated')
                 : message.content}
             </p>
           )}

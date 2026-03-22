@@ -6,8 +6,11 @@ import { useBuilderStore } from '@/store/builder-store'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { useTranslation } from '@/lib/i18n/i18n-context'
+import { LanguageSwitcher } from './LanguageSwitcher'
 
 export function BuilderHeader() {
+  const { t } = useTranslation()
   const { files, credits, setCredits, reset } = useBuilderStore()
   const hasFiles = Object.keys(files).length > 0
 
@@ -26,7 +29,7 @@ export function BuilderHeader() {
   const handleExport = () => {
     const html = files['index.html']
     if (!html) {
-      toast.error('Henüz oluşturulmuş bir site yok!')
+      toast.error(t('builder.noSiteYet'))
       return
     }
     const blob = new Blob([html], { type: 'text/html' })
@@ -36,13 +39,13 @@ export function BuilderHeader() {
     a.download = 'elannoire-site.html'
     a.click()
     URL.revokeObjectURL(url)
-    toast.success('Site indirildi!')
+    toast.success(t('builder.siteDownloaded'))
   }
 
   const handleReset = () => {
-    if (hasFiles && !window.confirm('Tüm çalışmanız silinecek. Emin misiniz?')) return
+    if (hasFiles && !window.confirm(t('builder.confirmReset'))) return
     reset()
-    toast.info('Proje sıfırlandı')
+    toast.info(t('builder.projectReset'))
   }
 
   return (
@@ -63,6 +66,9 @@ export function BuilderHeader() {
       </Link>
 
       <div className="flex items-center gap-2">
+        {/* Language switcher */}
+        <LanguageSwitcher />
+
         {/* Credits display */}
         <Link
           href="/pricing"

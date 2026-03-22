@@ -3,8 +3,8 @@ import type { Template } from '@/types/builder'
 export const templates: Template[] = [
   {
     id: 'landing',
-    name: 'Modern Landing Page',
-    description: 'Şık ve profesyonel bir landing page',
+    nameKey: 'modernLanding',
+    descKey: 'modernLandingDesc',
     icon: '🚀',
     category: 'landing',
     starterPrompt:
@@ -12,8 +12,8 @@ export const templates: Template[] = [
   },
   {
     id: 'portfolio',
-    name: 'Portfolio Website',
-    description: 'Kişisel portfolyo sitesi',
+    nameKey: 'portfolio',
+    descKey: 'portfolioDesc',
     icon: '🎨',
     category: 'portfolio',
     starterPrompt:
@@ -21,8 +21,8 @@ export const templates: Template[] = [
   },
   {
     id: '3d-hero',
-    name: '3D Interactive Hero',
-    description: '3D animasyonlu hero section',
+    nameKey: 'interactive3d',
+    descKey: 'interactive3dDesc',
     icon: '🌐',
     category: '3d',
     starterPrompt:
@@ -30,8 +30,8 @@ export const templates: Template[] = [
   },
   {
     id: 'dashboard',
-    name: 'Admin Dashboard',
-    description: 'Modern admin paneli',
+    nameKey: 'adminDashboard',
+    descKey: 'adminDashboardDesc',
     icon: '📊',
     category: 'dashboard',
     starterPrompt:
@@ -39,8 +39,8 @@ export const templates: Template[] = [
   },
   {
     id: 'ecommerce',
-    name: 'E-Commerce Store',
-    description: 'Online mağaza sayfası',
+    nameKey: 'ecommerce',
+    descKey: 'ecommerceDesc',
     icon: '🛍️',
     category: 'ecommerce',
     starterPrompt:
@@ -48,8 +48,8 @@ export const templates: Template[] = [
   },
   {
     id: 'blog',
-    name: 'Blog / Magazine',
-    description: 'Blog ve dergi sitesi',
+    nameKey: 'blog',
+    descKey: 'blogDesc',
     icon: '📝',
     category: 'blog',
     starterPrompt:

@@ -3,9 +3,11 @@
 import { Sparkles } from 'lucide-react'
 import { templates } from '@/lib/ai/templates'
 import { useBuilderStore } from '@/store/builder-store'
+import { useTranslation } from '@/lib/i18n/i18n-context'
 
 export function TemplateSelector() {
   const { setPrompt } = useBuilderStore()
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-6 px-2 relative z-[1]">
@@ -17,10 +19,10 @@ export function TemplateSelector() {
           className="text-xl italic text-gold-gradient"
           style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
         >
-          Ne oluşturmak istiyorsunuz?
+          {t('builder.whatToCreate')}
         </h2>
         <p className="text-xs text-gold-muted/50 max-w-[280px] mono-text tracking-wider leading-relaxed">
-          Bir şablon seçin veya hayalinizdeki web sitesini aşağıdaki kutucuğa yazın
+          {t('builder.selectTemplate')}
         </p>
       </div>
 
@@ -34,10 +36,10 @@ export function TemplateSelector() {
           >
             <span className="text-lg">{template.icon}</span>
             <span className="text-xs font-medium text-foreground/80 group-hover:text-gold transition-colors">
-              {template.name}
+              {t(`templates.${template.nameKey}`)}
             </span>
             <span className="text-[10px] text-gold-muted/40 leading-tight">
-              {template.description}
+              {t(`templates.${template.descKey}`)}
             </span>
           </button>
         ))}

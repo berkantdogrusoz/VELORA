@@ -5,10 +5,12 @@ import { useUIStore } from '@/store/ui-store'
 import { TabBar } from './TabBar'
 import { CodeEditor } from './CodeEditor'
 import { Globe, Loader2 } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n/i18n-context'
 
 export function PreviewPanel() {
   const { files, isGenerating } = useBuilderStore()
   const { activeTab, deviceView } = useUIStore()
+  const { t } = useTranslation()
   const html = files['index.html'] || ''
   const hasContent = html.length > 0
 
@@ -33,7 +35,7 @@ export function PreviewPanel() {
               />
             </div>
           ) : (
-            <EmptyPreview isGenerating={isGenerating} />
+            <EmptyPreview isGenerating={isGenerating} t={t} />
           )
         ) : (
           <CodeEditor />
@@ -43,7 +45,7 @@ export function PreviewPanel() {
         {isGenerating && hasContent && (
           <div className="absolute top-3 right-3 flex items-center gap-2 bg-obsidian/90 backdrop-blur border border-gold/[0.15] rounded-lg px-3 py-1.5 text-xs text-gold/80 mono-text tracking-wider">
             <Loader2 className="w-3 h-3 animate-spin" />
-            Güncelleniyor...
+            {t('builder.updating')}
           </div>
         )}
       </div>
@@ -51,7 +53,7 @@ export function PreviewPanel() {
   )
 }
 
-function EmptyPreview({ isGenerating }: { isGenerating: boolean }) {
+function EmptyPreview({ isGenerating, t }: { isGenerating: boolean; t: (key: string) => string }) {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-4 obsidian-bg gold-veins relative">
       {isGenerating ? (
@@ -63,10 +65,10 @@ function EmptyPreview({ isGenerating }: { isGenerating: boolean }) {
             className="text-sm text-gold-gradient italic"
             style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
           >
-            Siteniz oluşturuluyor...
+            {t('builder.creatingYourSite')}
           </p>
           <p className="text-xs text-gold-muted/40 mono-text tracking-wider">
-            AI muhteşem bir şey hazırlıyor
+            {t('builder.aiPreparing')}
           </p>
         </div>
       ) : (
@@ -78,10 +80,10 @@ function EmptyPreview({ isGenerating }: { isGenerating: boolean }) {
             className="text-sm text-gold-gradient italic"
             style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
           >
-            Önizleme burada görünecek
+            {t('builder.previewHere')}
           </p>
           <p className="text-xs text-gold-muted/30 mono-text tracking-wider">
-            Soldaki panelden bir prompt gönderin
+            {t('builder.sendPrompt')}
           </p>
         </div>
       )}
