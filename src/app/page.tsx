@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { useAuth } from '@clerk/nextjs'
 import {
   ArrowRight,
   Sparkles,
@@ -44,6 +45,7 @@ function useCounter(target: number, duration: number = 2000, startCounting: bool
 /* Brand names imported from BrandLogos component */
 
 export default function Home() {
+  const { isSignedIn } = useAuth()
   const sectionsRef = useRef<HTMLDivElement[]>([])
   const [statsVisible, setStatsVisible] = useState(false)
 
@@ -108,18 +110,29 @@ export default function Home() {
               </a>
             </div>
             <div className="flex items-center gap-4">
-              <Link
-                href="/sign-in"
-                className="mono-text text-[11px] text-gold-muted hover:text-gold transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/sign-up"
-                className="btn-gold-fill px-5 py-2 text-[11px] mono-text tracking-wider"
-              >
-                Get Started
-              </Link>
+              {isSignedIn ? (
+                <Link
+                  href="/builder"
+                  className="btn-gold-fill px-5 py-2 text-[11px] mono-text tracking-wider"
+                >
+                  Go to Builder
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/sign-in"
+                    className="mono-text text-[11px] text-gold-muted hover:text-gold transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/sign-up"
+                    className="btn-gold-fill px-5 py-2 text-[11px] mono-text tracking-wider"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </nav>
