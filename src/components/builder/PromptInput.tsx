@@ -143,8 +143,8 @@ export function PromptInput() {
   }
 
   return (
-    <div className="border-t border-gold/[0.08] p-3">
-      <div className="flex items-end gap-2 bg-obsidian-light/50 rounded-lg border border-gold/[0.1] p-2 focus-within:border-gold/[0.25] transition-colors">
+    <div className="border-t border-gold/[0.1] p-3 relative z-[1]">
+      <div className="flex items-end gap-2 bg-obsidian-light/40 rounded-lg border border-gold/[0.12] p-2 focus-within:border-gold/[0.3] focus-within:shadow-[0_0_15px_rgba(201,168,76,0.06)] transition-all">
         <textarea
           ref={textareaRef}
           value={input}

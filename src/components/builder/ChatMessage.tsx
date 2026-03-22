@@ -7,18 +7,18 @@ export function ChatMessage({ message }: { message: Message }) {
   const isUser = message.role === 'user'
 
   return (
-    <div className={`flex gap-3 animate-fade-in ${isUser ? '' : ''}`}>
+    <div className={`flex gap-3 animate-fade-in relative z-[1] ${isUser ? '' : ''}`}>
       <div
         className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
           isUser
-            ? 'bg-obsidian-light border border-gold/[0.08] text-foreground/60'
-            : 'bg-gold/[0.1] border border-gold/[0.2] text-gold'
+            ? 'bg-obsidian-light/80 border border-gold/[0.08] text-foreground/60'
+            : 'bg-gold/[0.1] border border-gold/[0.2] text-gold shadow-[0_0_10px_rgba(201,168,76,0.08)]'
         }`}
       >
         {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-gold-muted/50 mb-1 mono-text tracking-wider">
+        <p className={`text-xs font-medium mb-1 mono-text tracking-wider ${isUser ? 'text-gold-muted/50' : 'text-gold/60'}`}>
           {isUser ? 'SEN' : 'ÉLANNOIRE AI'}
         </p>
         <div
@@ -31,7 +31,7 @@ export function ChatMessage({ message }: { message: Message }) {
           ) : (
             <p className="whitespace-pre-wrap">
               {message.content.includes('<velora-file')
-                ? 'Site oluşturuldu! Sağ panelde önizlemeyi görebilirsiniz. ✨'
+                ? 'Site oluşturuldu! Sağ panelde önizlemeyi görebilirsiniz.'
                 : message.content}
             </p>
           )}

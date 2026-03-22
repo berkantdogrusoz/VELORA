@@ -13,7 +13,7 @@ export function PreviewPanel() {
   const hasContent = html.length > 0
 
   return (
-    <div className="flex flex-col h-full bg-obsidian-light/30">
+    <div className="flex flex-col h-full bg-obsidian/60">
       <TabBar />
       <div className="flex-1 relative overflow-hidden">
         {activeTab === 'preview' ? (
@@ -53,14 +53,14 @@ export function PreviewPanel() {
 
 function EmptyPreview({ isGenerating }: { isGenerating: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-3">
+    <div className="flex flex-col items-center justify-center h-full gap-4 obsidian-bg gold-veins relative">
       {isGenerating ? (
-        <>
-          <div className="w-16 h-16 rounded-2xl bg-gold/[0.06] border border-gold/[0.12] flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-gold/50 animate-spin" />
+        <div className="relative z-[1] flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-gold/[0.06] border border-gold/[0.15] flex items-center justify-center animate-pulse-glow">
+            <Loader2 className="w-8 h-8 text-gold/60 animate-spin" />
           </div>
           <p
-            className="text-sm text-foreground/80 italic"
+            className="text-sm text-gold-gradient italic"
             style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
           >
             Siteniz oluşturuluyor...
@@ -68,14 +68,14 @@ function EmptyPreview({ isGenerating }: { isGenerating: boolean }) {
           <p className="text-xs text-gold-muted/40 mono-text tracking-wider">
             AI muhteşem bir şey hazırlıyor
           </p>
-        </>
+        </div>
       ) : (
-        <>
-          <div className="w-16 h-16 rounded-2xl bg-obsidian-light border border-gold/[0.08] flex items-center justify-center">
-            <Globe className="w-8 h-8 text-gold/20" />
+        <div className="relative z-[1] flex flex-col items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl gold-border-glow bg-obsidian-light/50 flex items-center justify-center">
+            <Globe className="w-8 h-8 text-gold/25" />
           </div>
           <p
-            className="text-sm text-foreground/70 italic"
+            className="text-sm text-gold-gradient italic"
             style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
           >
             Önizleme burada görünecek
@@ -83,7 +83,7 @@ function EmptyPreview({ isGenerating }: { isGenerating: boolean }) {
           <p className="text-xs text-gold-muted/30 mono-text tracking-wider">
             Soldaki panelden bir prompt gönderin
           </p>
-        </>
+        </div>
       )}
     </div>
   )

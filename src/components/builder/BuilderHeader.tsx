@@ -46,7 +46,7 @@ export function BuilderHeader() {
   }
 
   return (
-    <header className="h-12 bg-obsidian border-b border-gold/[0.1] flex items-center justify-between px-4 shrink-0">
+    <header className="h-12 bg-obsidian/80 backdrop-blur-xl border-b border-gold/[0.12] flex items-center justify-between px-4 shrink-0 relative z-10" style={{ boxShadow: '0 1px 20px rgba(201, 168, 76, 0.03)' }}>
       <Link href="/" className="flex items-center gap-2">
         <div className="w-7 h-7 rounded-lg bg-gold/[0.1] border border-gold/[0.2] flex items-center justify-center">
           <Sparkles className="w-4 h-4 text-gold/70" />

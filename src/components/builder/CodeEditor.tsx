@@ -7,9 +7,9 @@ import { Loader2 } from 'lucide-react'
 const Editor = dynamic(() => import('@monaco-editor/react').then((m) => m.default), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-full bg-card">
-      <div className="flex items-center gap-2 text-muted text-sm">
-        <Loader2 className="w-4 h-4 animate-spin" />
+    <div className="flex items-center justify-center h-full bg-obsidian">
+      <div className="flex items-center gap-2 text-gold-muted/50 text-sm mono-text tracking-wider">
+        <Loader2 className="w-4 h-4 animate-spin text-gold/50" />
         Editör yükleniyor...
       </div>
     </div>

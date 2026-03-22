@@ -80,13 +80,14 @@ pre, code {
 
 /* Resize handle styling */
 [data-panel-resize-handle-id] {
-  background: var(--border) !important;
-  transition: background 0.2s;
+  background: rgba(201, 168, 76, 0.06) !important;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 [data-panel-resize-handle-id]:hover,
 [data-panel-resize-handle-id][data-resize-handle-active] {
-  background: var(--accent) !important;
+  background: rgba(201, 168, 76, 0.25) !important;
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.15);
 }
 
 /* ===== LANDING PAGE STYLES ===== */

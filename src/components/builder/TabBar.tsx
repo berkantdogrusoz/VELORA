@@ -7,7 +7,7 @@ export function TabBar() {
   const { activeTab, setActiveTab, deviceView, setDeviceView } = useUIStore()
 
   return (
-    <div className="h-10 bg-obsidian border-b border-gold/[0.08] flex items-center justify-between px-2 shrink-0">
+    <div className="h-10 bg-obsidian/80 backdrop-blur-md border-b border-gold/[0.1] flex items-center justify-between px-2 shrink-0">
       {/* Tab buttons */}
       <div className="flex items-center gap-0.5">
         <TabButton
