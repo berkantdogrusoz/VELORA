@@ -4,10 +4,13 @@ import { anthropic } from '@ai-sdk/anthropic'
 export const maxDuration = 60
 
 const MODELS_TO_TRY = [
-  'claude-haiku-4-5-20251001',
+  'claude-sonnet-4-5-20241022',
   'claude-sonnet-4-20250514',
   'claude-sonnet-4-6',
-  'claude-sonnet-4-5-20241022',
+  'claude-sonnet-4-6-20250514',
+  'claude-sonnet-4-5',
+  'claude-sonnet-4',
+  'claude-haiku-4-5-20251001',
 ]
 
 export async function GET() {
@@ -15,7 +18,6 @@ export async function GET() {
     return Response.json({
       ok: false,
       error: 'ANTHROPIC_API_KEY is not set',
-      keyPrefix: 'N/A',
     })
   }
 
@@ -30,18 +32,17 @@ export async function GET() {
         maxOutputTokens: 10,
       })
       results.push({ model: modelId, ok: true, response: result.text })
-      break // Found a working model, stop
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       results.push({ model: modelId, ok: false, error: message })
     }
   }
 
-  const working = results.find(r => r.ok)
+  const working = results.filter(r => r.ok).map(r => r.model)
 
   return Response.json({
     keyPrefix,
-    workingModel: working?.model || null,
+    workingModels: working,
     results,
   })
 }
