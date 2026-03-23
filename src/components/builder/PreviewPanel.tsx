@@ -14,41 +14,27 @@ export function PreviewPanel() {
   const { t } = useTranslation()
   const html = files['index.html'] || ''
   const hasContent = html.length > 0
-  const [debouncedHtml, setDebouncedHtml] = useState('')
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const [previewHtml, setPreviewHtml] = useState('')
 
-  // Debounced preview update — prevents flickering during streaming
+  // Only update preview when generation completes — zero flicker
   useEffect(() => {
-    if (!html) return
-
-    // When generation finishes, immediately show final result
-    if (!isGenerating) {
-      if (debounceRef.current) clearTimeout(debounceRef.current)
-      setDebouncedHtml(html)
-      return
+    if (!isGenerating && html) {
+      setPreviewHtml(html)
     }
+  }, [isGenerating, html])
 
-    // During streaming, debounce updates to reduce flicker
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => {
-      setDebouncedHtml(html)
-    }, 800)
-
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current)
-    }
-  }, [html, isGenerating])
+  const showPreview = previewHtml.length > 0
 
   return (
     <div className="flex flex-col h-full bg-obsidian/60">
       <TabBar />
       <div className="flex-1 relative overflow-hidden">
         {activeTab === 'preview' ? (
-          hasContent ? (
+          showPreview && !isGenerating ? (
             <div className="w-full h-full flex items-start justify-center bg-obsidian overflow-auto p-0">
               <iframe
                 key="preview-iframe"
-                srcDoc={debouncedHtml}
+                srcDoc={previewHtml}
                 sandbox="allow-scripts"
                 className={`h-full border-0 bg-white transition-all duration-300 ${
                   deviceView === 'desktop'
