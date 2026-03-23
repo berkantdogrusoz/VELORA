@@ -4,6 +4,8 @@ import { auth } from '@clerk/nextjs/server'
 import { buildSystemPrompt } from '@/lib/ai/prompt-builder'
 import { deductCredit, logGeneration, getOrCreateUser } from '@/lib/db/credits'
 
+export const maxDuration = 60
+
 export async function POST(request: Request) {
   try {
     const { userId } = await auth()
@@ -52,29 +54,7 @@ export async function POST(request: Request) {
     // Log the generation
     logGeneration(userId, lastMessage?.content || '', 1).catch(console.error)
 
-    // Return as a plain text stream for easier parsing
-    const stream = result.textStream
-
-    const encoder = new TextEncoder()
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            controller.enqueue(encoder.encode(chunk))
-          }
-          controller.close()
-        } catch (error) {
-          controller.error(error)
-        }
-      },
-    })
-
-    return new Response(readable, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'no-cache',
-      },
-    })
+    return result.toTextStreamResponse()
   } catch (error) {
     console.error('Generate API error:', error)
 

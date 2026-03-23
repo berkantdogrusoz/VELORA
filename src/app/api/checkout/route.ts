@@ -25,10 +25,26 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Invalid plan' }, { status: 400 })
     }
 
-    if (!LEMON_SQUEEZY_API_KEY || !planConfig.variantId) {
+    if (!LEMON_SQUEEZY_API_KEY) {
+      console.error('LEMONSQUEEZY_API_KEY is not configured')
       return Response.json(
-        { error: 'Payment system is being configured. Please try again later.' },
+        { error: 'Payment system is not configured yet. Please contact support.' },
         { status: 503 }
+      )
+    }
+
+    if (!STORE_ID) {
+      console.error('LEMONSQUEEZY_STORE_ID is not configured')
+      return Response.json(
+        { error: 'Payment system is not configured yet. Please contact support.' },
+        { status: 503 }
+      )
+    }
+
+    if (!planConfig.variantId) {
+      return Response.json(
+        { error: 'Invalid plan configuration.' },
+        { status: 400 }
       )
     }
 

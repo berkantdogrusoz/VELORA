@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Send, Loader2 } from 'lucide-react'
 import { useBuilderStore } from '@/store/builder-store'
-import { parsePartialVeloraFile } from '@/lib/ai/stream-parser'
+import { parsePartialVeloraFile, parseVeloraFiles } from '@/lib/ai/stream-parser'
 import { toast } from 'sonner'
 import { useTranslation } from '@/lib/i18n/i18n-context'
 
@@ -58,6 +58,10 @@ export function PromptInput() {
     try {
       const currentCode = files['index.html'] || undefined
 
+      // Timeout after 90 seconds
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 90000)
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -68,7 +72,10 @@ export function PromptInput() {
           })),
           currentCode,
         }),
+        signal: controller.signal,
       })
+
+      clearTimeout(timeout)
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
@@ -88,7 +95,7 @@ export function PromptInput() {
       decrementCredits()
 
       const reader = response.body?.getReader()
-      if (!reader) throw new Error(t('builder.streamError'))
+      if (!reader) throw new Error('Stream not available')
 
       const decoder = new TextDecoder()
       let fullText = ''
@@ -107,21 +114,31 @@ export function PromptInput() {
         }
       }
 
+      // Final parse — ensure files are populated even if progressive parse missed them
+      const finalFiles = parseVeloraFiles(fullText)
+      if (Object.keys(finalFiles).length > 0) {
+        setFiles(finalFiles)
+      } else if (fullText.trim()) {
+        // AI responded but didn't use velora-file tags — show the raw response
+        console.warn('AI response did not contain <velora-file> tags:', fullText.substring(0, 200))
+      }
+
       // Add assistant message
       addMessage({
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: fullText,
+        content: fullText || t('builder.errorMessage'),
         timestamp: Date.now(),
       })
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : t('builder.errorOccurred')
-      )
+      const msg = error instanceof Error
+        ? (error.name === 'AbortError' ? 'Request timed out. Please try again.' : error.message)
+        : t('builder.errorOccurred')
+      toast.error(msg)
       addMessage({
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: t('builder.errorMessage'),
+        content: msg,
         timestamp: Date.now(),
       })
     } finally {
