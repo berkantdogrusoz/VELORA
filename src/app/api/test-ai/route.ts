@@ -1,41 +1,47 @@
 import { generateText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
 
-export const maxDuration = 30
+export const maxDuration = 60
+
+const MODELS_TO_TRY = [
+  'claude-haiku-4-5-20251001',
+  'claude-sonnet-4-20250514',
+  'claude-sonnet-4-6',
+  'claude-sonnet-4-5-20241022',
+]
 
 export async function GET() {
-  const modelId = 'claude-3-5-sonnet-20241022'
-
-  try {
-    // Check if API key is set
-    if (!process.env.ANTHROPIC_API_KEY) {
-      return Response.json({
-        ok: false,
-        error: 'ANTHROPIC_API_KEY is not set',
-      })
-    }
-
-    const result = await generateText({
-      model: anthropic(modelId),
-      prompt: 'Say "Hello, ÉlanNoire is working!" and nothing else.',
-      maxOutputTokens: 50,
-    })
-
-    return Response.json({
-      ok: true,
-      model: modelId,
-      response: result.text,
-      usage: result.usage,
-    })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-    const name = error instanceof Error ? error.name : 'Unknown'
-
+  if (!process.env.ANTHROPIC_API_KEY) {
     return Response.json({
       ok: false,
-      model: modelId,
-      errorName: name,
-      error: message,
+      error: 'ANTHROPIC_API_KEY is not set',
+      keyPrefix: 'N/A',
     })
   }
+
+  const keyPrefix = process.env.ANTHROPIC_API_KEY.substring(0, 12) + '...'
+  const results: Array<{ model: string; ok: boolean; response?: string; error?: string }> = []
+
+  for (const modelId of MODELS_TO_TRY) {
+    try {
+      const result = await generateText({
+        model: anthropic(modelId),
+        prompt: 'Say "Hello" and nothing else.',
+        maxOutputTokens: 10,
+      })
+      results.push({ model: modelId, ok: true, response: result.text })
+      break // Found a working model, stop
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      results.push({ model: modelId, ok: false, error: message })
+    }
+  }
+
+  const working = results.find(r => r.ok)
+
+  return Response.json({
+    keyPrefix,
+    workingModel: working?.model || null,
+    results,
+  })
 }
