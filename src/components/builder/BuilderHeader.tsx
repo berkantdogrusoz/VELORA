@@ -49,50 +49,50 @@ export function BuilderHeader() {
   }
 
   return (
-    <header className="h-12 bg-obsidian/80 backdrop-blur-xl border-b border-gold/[0.12] flex items-center justify-between px-4 shrink-0 relative z-10" style={{ boxShadow: '0 1px 20px rgba(201, 168, 76, 0.03)' }}>
-      <Link href="/" className="flex items-center gap-2">
+    <header className="h-12 bg-obsidian/80 backdrop-blur-xl border-b border-gold/[0.12] flex items-center justify-between px-2 md:px-4 shrink-0 relative z-10" style={{ boxShadow: '0 1px 20px rgba(201, 168, 76, 0.03)' }}>
+      <Link href="/" className="flex items-center gap-1.5 md:gap-2">
         <div className="w-7 h-7 rounded-lg bg-gold/[0.1] border border-gold/[0.2] flex items-center justify-center">
           <Sparkles className="w-4 h-4 text-gold/70" />
         </div>
         <span
-          className="text-sm text-gold tracking-[0.05em]"
+          className="hidden md:inline text-sm text-gold tracking-[0.05em]"
           style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
         >
           Élan<span className="text-foreground/90">Noire</span>
         </span>
-        <span className="text-[9px] text-gold-muted/50 mono-text px-1.5 py-0.5 border border-gold/[0.1] rounded-full">
+        <span className="hidden md:inline text-[9px] text-gold-muted/50 mono-text px-1.5 py-0.5 border border-gold/[0.1] rounded-full">
           BETA
         </span>
       </Link>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 md:gap-2">
         {/* Language switcher */}
         <LanguageSwitcher />
 
         {/* Credits display */}
         <Link
           href="/pricing"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gold/[0.06] border border-gold/[0.1] hover:bg-gold/[0.12] transition-colors"
+          className="flex items-center gap-1 md:gap-1.5 px-2 md:px-3 py-1.5 text-xs rounded-lg bg-gold/[0.06] border border-gold/[0.1] hover:bg-gold/[0.12] transition-colors"
         >
           <Coins className="w-3.5 h-3.5 text-gold/70" />
           <span className="mono-text text-[11px] text-gold/80 tracking-wider">
             {credits !== null ? credits : '...'}
           </span>
-          <span className="text-[9px] text-gold-muted/40 mono-text">CREDITS</span>
+          <span className="hidden md:inline text-[9px] text-gold-muted/40 mono-text">CREDITS</span>
         </Link>
 
         {hasFiles && (
           <>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-gold/[0.08] text-gold/80 hover:bg-gold/[0.15] hover:text-gold border border-gold/[0.1] transition-colors mono-text tracking-wider"
+              className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 text-xs font-medium rounded-lg bg-gold/[0.08] text-gold/80 hover:bg-gold/[0.15] hover:text-gold border border-gold/[0.1] transition-colors mono-text tracking-wider"
             >
               <Download className="w-3.5 h-3.5" />
-              Export
+              <span className="hidden md:inline">Export</span>
             </button>
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-gold/[0.06] text-gold-muted/50 hover:text-gold/70 transition-colors"
+              className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 text-xs font-medium rounded-lg hover:bg-gold/[0.06] text-gold-muted/50 hover:text-gold/70 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
@@ -100,7 +100,7 @@ export function BuilderHeader() {
         )}
 
         {/* User button */}
-        <div className="ml-1">
+        <div className="ml-0.5 md:ml-1">
           <UserButton
             appearance={{
               elements: {

@@ -24,9 +24,9 @@ export function TabBar() {
         />
       </div>
 
-      {/* Device view buttons (only in preview mode) */}
+      {/* Device view buttons (only in preview mode, hidden on mobile) */}
       {activeTab === 'preview' && (
-        <div className="flex items-center gap-0.5">
+        <div className="hidden md:flex items-center gap-0.5">
           <DeviceButton
             active={deviceView === 'desktop'}
             onClick={() => setDeviceView('desktop')}

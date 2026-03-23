@@ -4,24 +4,24 @@ import { create } from 'zustand'
 
 type ActiveTab = 'preview' | 'code'
 type DeviceView = 'desktop' | 'tablet' | 'mobile'
+type MobilePanel = 'prompt' | 'preview'
 
 interface UIState {
   activeTab: ActiveTab
   deviceView: DeviceView
-  isSidebarCollapsed: boolean
+  mobilePanel: MobilePanel
 
   setActiveTab: (tab: ActiveTab) => void
   setDeviceView: (view: DeviceView) => void
-  toggleSidebar: () => void
+  setMobilePanel: (panel: MobilePanel) => void
 }
 
 export const useUIStore = create<UIState>((set) => ({
   activeTab: 'preview',
   deviceView: 'desktop',
-  isSidebarCollapsed: false,
+  mobilePanel: 'prompt',
 
   setActiveTab: (tab) => set({ activeTab: tab }),
   setDeviceView: (view) => set({ deviceView: view }),
-  toggleSidebar: () =>
-    set((state) => ({ isSidebarCollapsed: !state.isSidebarCollapsed })),
+  setMobilePanel: (panel) => set({ mobilePanel: panel }),
 }))

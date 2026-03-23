@@ -162,8 +162,8 @@ export function PromptInput() {
   }
 
   return (
-    <div className="border-t border-gold/[0.1] p-4 relative z-[1]">
-      <div className="flex items-end gap-2 bg-obsidian-light/40 rounded-xl border border-gold/[0.12] p-3 focus-within:border-gold/[0.3] focus-within:shadow-[0_0_15px_rgba(201,168,76,0.06)] transition-all">
+    <div className="border-t border-gold/[0.1] p-2 md:p-4 relative z-[1]">
+      <div className="flex items-end gap-2 bg-obsidian-light/40 rounded-xl border border-gold/[0.12] p-2 md:p-3 focus-within:border-gold/[0.3] focus-within:shadow-[0_0_15px_rgba(201,168,76,0.06)] transition-all">
         <textarea
           ref={textareaRef}
           value={input}
@@ -176,7 +176,7 @@ export function PromptInput() {
           }
           disabled={isGenerating}
           rows={2}
-          className="flex-1 bg-transparent text-base resize-none outline-none placeholder:text-gold-muted/30 text-foreground/90 disabled:opacity-50 max-h-[300px] py-2.5 px-3"
+          className="flex-1 bg-transparent text-sm md:text-base resize-none outline-none placeholder:text-gold-muted/30 text-foreground/90 disabled:opacity-50 max-h-[300px] py-2 px-2 md:py-2.5 md:px-3"
         />
         <button
           onClick={handleSubmit}
@@ -190,7 +190,7 @@ export function PromptInput() {
           )}
         </button>
       </div>
-      <p className="text-[10px] text-gold-muted/30 mt-1.5 px-1 mono-text tracking-wider">
+      <p className="hidden md:block text-[10px] text-gold-muted/30 mt-1.5 px-1 mono-text tracking-wider">
         {t('builder.sendHint')}
       </p>
     </div>
