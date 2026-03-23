@@ -54,7 +54,32 @@ export async function POST(request: Request) {
     // Log the generation
     logGeneration(userId, lastMessage?.content || '', 1).catch(console.error)
 
-    return result.toTextStreamResponse()
+    // Use manual stream to catch errors properly
+    const stream = result.textStream
+    const encoder = new TextEncoder()
+
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of stream) {
+            controller.enqueue(encoder.encode(chunk))
+          }
+          controller.close()
+        } catch (error) {
+          console.error('Stream error:', error)
+          const errMsg = error instanceof Error ? error.message : 'Stream failed'
+          controller.enqueue(encoder.encode(`\n\n[ERROR]: ${errMsg}`))
+          controller.close()
+        }
+      },
+    })
+
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+      },
+    })
   } catch (error) {
     console.error('Generate API error:', error)
 
