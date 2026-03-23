@@ -35,7 +35,7 @@ export function PreviewPanel() {
               <iframe
                 key="preview-iframe"
                 srcDoc={previewHtml}
-                sandbox="allow-scripts"
+                sandbox="allow-scripts allow-same-origin"
                 className={`h-full border-0 bg-white transition-all duration-300 ${
                   deviceView === 'desktop'
                     ? 'w-full'
