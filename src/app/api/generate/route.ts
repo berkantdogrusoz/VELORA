@@ -42,16 +42,13 @@ export async function POST(request: Request) {
     const lastMessage = messages[messages.length - 1]
 
     const result = streamText({
-      model: anthropic('claude-3-5-sonnet-20241022'),
+      model: anthropic('claude-sonnet-4-6-20250514'),
       system: systemPrompt,
       messages: messages.map((m: { role: string; content: string }) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
-      maxOutputTokens: 8000,
-      onError: ({ error }) => {
-        console.error('Stream error:', error)
-      },
+      maxOutputTokens: 16000,
     })
 
     // Log the generation
