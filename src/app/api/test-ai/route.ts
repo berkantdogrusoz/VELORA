@@ -4,7 +4,7 @@ import { anthropic } from '@ai-sdk/anthropic'
 export const maxDuration = 30
 
 export async function GET() {
-  const modelId = 'claude-sonnet-4-6-20250514'
+  const modelId = 'claude-3-5-sonnet-20241022'
 
   try {
     // Check if API key is set
