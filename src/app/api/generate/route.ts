@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     const lastMessage = messages[messages.length - 1]
 
     const result = streamText({
-      model: anthropic('claude-haiku-4-5-20251001'),
+      model: anthropic('claude-sonnet-4-6'),
       system: systemPrompt,
       messages: messages.map((m: { role: string; content: string }) => ({
         role: m.role as 'user' | 'assistant',
