@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
-      maxOutputTokens: 8000,
+      maxOutputTokens: 32000,
     })
 
     // Log the generation

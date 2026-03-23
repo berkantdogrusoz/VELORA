@@ -6,6 +6,7 @@ import { TabBar } from './TabBar'
 import { CodeEditor } from './CodeEditor'
 import { Globe, Loader2 } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n/i18n-context'
+import { useRef, useEffect, useCallback } from 'react'
 
 export function PreviewPanel() {
   const { files, isGenerating } = useBuilderStore()
@@ -13,6 +14,27 @@ export function PreviewPanel() {
   const { t } = useTranslation()
   const html = files['index.html'] || ''
   const hasContent = html.length > 0
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
+  const lastHtmlRef = useRef('')
+
+  // Debounced iframe update — prevents flickering during streaming
+  useEffect(() => {
+    if (!hasContent || html === lastHtmlRef.current) return
+
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+
+    debounceRef.current = setTimeout(() => {
+      if (iframeRef.current) {
+        iframeRef.current.srcdoc = html
+        lastHtmlRef.current = html
+      }
+    }, 300)
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [html, hasContent])
 
   return (
     <div className="flex flex-col h-full bg-obsidian/60">
@@ -22,8 +44,8 @@ export function PreviewPanel() {
           hasContent ? (
             <div className="w-full h-full flex items-start justify-center bg-obsidian overflow-auto p-0">
               <iframe
-                srcDoc={html}
-                sandbox="allow-scripts allow-same-origin"
+                ref={iframeRef}
+                sandbox="allow-scripts"
                 className={`h-full border-0 bg-white transition-all duration-300 ${
                   deviceView === 'desktop'
                     ? 'w-full'
