@@ -10,6 +10,8 @@ interface BuilderState {
   isGenerating: boolean
   prompt: string
   credits: number | null
+  projectId: string | null
+  projectTitle: string
 
   addMessage: (msg: Message) => void
   setFiles: (files: Record<string, string>) => void
@@ -19,6 +21,9 @@ interface BuilderState {
   setPrompt: (v: string) => void
   setCredits: (n: number) => void
   decrementCredits: () => void
+  setProjectId: (id: string | null) => void
+  setProjectTitle: (title: string) => void
+  loadProject: (id: string, title: string, messages: Message[], files: Record<string, string>) => void
   reset: () => void
 }
 
@@ -29,6 +34,8 @@ export const useBuilderStore = create<BuilderState>((set) => ({
   isGenerating: false,
   prompt: '',
   credits: null,
+  projectId: null,
+  projectTitle: '',
 
   addMessage: (msg) =>
     set((state) => ({ messages: [...state.messages, msg] })),
@@ -53,6 +60,21 @@ export const useBuilderStore = create<BuilderState>((set) => ({
       credits: state.credits !== null ? Math.max(0, state.credits - 1) : null,
     })),
 
+  setProjectId: (id) => set({ projectId: id }),
+
+  setProjectTitle: (title) => set({ projectTitle: title }),
+
+  loadProject: (id, title, messages, files) =>
+    set({
+      projectId: id,
+      projectTitle: title,
+      messages,
+      files,
+      activeFile: 'index.html',
+      isGenerating: false,
+      prompt: '',
+    }),
+
   reset: () =>
     set({
       messages: [],
@@ -60,5 +82,7 @@ export const useBuilderStore = create<BuilderState>((set) => ({
       activeFile: 'index.html',
       isGenerating: false,
       prompt: '',
+      projectId: null,
+      projectTitle: '',
     }),
 }))
