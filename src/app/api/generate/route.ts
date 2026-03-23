@@ -48,7 +48,10 @@ export async function POST(request: Request) {
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
-      maxOutputTokens: 16000,
+      maxOutputTokens: 8000,
+      onError: ({ error }) => {
+        console.error('Stream error:', error)
+      },
     })
 
     // Log the generation
