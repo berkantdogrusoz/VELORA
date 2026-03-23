@@ -1,6 +1,6 @@
 'use client'
 
-import { Sparkles, Download, RotateCcw, Coins, FolderOpen, Save } from 'lucide-react'
+import { Sparkles, Download, RotateCcw, Coins, FolderOpen, Save, Globe } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
 import { useBuilderStore } from '@/store/builder-store'
 import { toast } from 'sonner'
@@ -9,12 +9,14 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useTranslation } from '@/lib/i18n/i18n-context'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ProjectSidebar } from './ProjectSidebar'
+import { PublishDialog } from './PublishDialog'
 
 export function BuilderHeader() {
   const { t } = useTranslation()
   const { files, credits, messages, projectId, projectTitle, isGenerating, setCredits, setProjectId, setProjectTitle, reset } = useBuilderStore()
   const hasFiles = Object.keys(files).length > 0
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [publishOpen, setPublishOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const prevGenerating = useRef(isGenerating)
 
@@ -35,7 +37,6 @@ export function BuilderHeader() {
 
     setSaving(true)
     try {
-      // Auto-generate title from first user message
       const firstUserMsg = messages.find((m) => m.role === 'user')
       const title = projectTitle || (firstUserMsg?.content.substring(0, 80) || 'Untitled Project')
 
@@ -79,19 +80,39 @@ export function BuilderHeader() {
     toast.success(t('projects.saved'))
   }
 
-  const handleExport = () => {
-    const html = files['index.html']
-    if (!html) {
+  const handleExport = async () => {
+    const fileEntries = Object.entries(files)
+    if (fileEntries.length === 0) {
       toast.error(t('builder.noSiteYet'))
       return
     }
-    const blob = new Blob([html], { type: 'text/html' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'elannoire-site.html'
-    a.click()
-    URL.revokeObjectURL(url)
+
+    if (fileEntries.length === 1) {
+      // Single file — download as HTML
+      const [, content] = fileEntries[0]
+      const blob = new Blob([content], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'elannoire-site.html'
+      a.click()
+      URL.revokeObjectURL(url)
+    } else {
+      // Multiple files — download as ZIP
+      const JSZip = (await import('jszip')).default
+      const zip = new JSZip()
+      for (const [name, content] of fileEntries) {
+        zip.file(name, content)
+      }
+      const blob = await zip.generateAsync({ type: 'blob' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'elannoire-site.zip'
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+
     toast.success(t('builder.siteDownloaded'))
   }
 
@@ -159,6 +180,15 @@ export function BuilderHeader() {
                 <span className="hidden md:inline">{saving ? t('projects.saving') : t('projects.save')}</span>
               </button>
 
+              {/* Publish button */}
+              <button
+                onClick={() => setPublishOpen(true)}
+                className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 text-xs font-medium rounded-lg bg-gold/[0.12] text-gold hover:bg-gold/[0.2] border border-gold/[0.2] transition-colors mono-text tracking-wider"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">{t('publish.publish')}</span>
+              </button>
+
               <button
                 onClick={handleExport}
                 className="flex items-center gap-1.5 px-2 md:px-3 py-1.5 text-xs font-medium rounded-lg bg-gold/[0.08] text-gold/80 hover:bg-gold/[0.15] hover:text-gold border border-gold/[0.1] transition-colors mono-text tracking-wider"
@@ -189,6 +219,7 @@ export function BuilderHeader() {
       </header>
 
       <ProjectSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <PublishDialog open={publishOpen} onClose={() => setPublishOpen(false)} />
     </>
   )
 }

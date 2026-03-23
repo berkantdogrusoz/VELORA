@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { messages, currentCode } = await request.json()
+    const { messages, currentFiles, currentCode } = await request.json()
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return Response.json(
@@ -35,8 +35,11 @@ export async function POST(request: Request) {
       )
     }
 
+    // Support both currentFiles (new) and currentCode (legacy)
+    const files = currentFiles || (currentCode ? { 'index.html': currentCode } : undefined)
+
     const systemPrompt = buildSystemPrompt({
-      currentCode: currentCode || undefined,
+      currentFiles: files,
     })
 
     const lastMessage = messages[messages.length - 1]

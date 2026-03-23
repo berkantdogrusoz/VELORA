@@ -12,6 +12,7 @@ interface BuilderState {
   credits: number | null
   projectId: string | null
   projectTitle: string
+  publishedSlug: string | null
 
   addMessage: (msg: Message) => void
   setFiles: (files: Record<string, string>) => void
@@ -23,7 +24,8 @@ interface BuilderState {
   decrementCredits: () => void
   setProjectId: (id: string | null) => void
   setProjectTitle: (title: string) => void
-  loadProject: (id: string, title: string, messages: Message[], files: Record<string, string>) => void
+  setPublishedSlug: (slug: string | null) => void
+  loadProject: (id: string, title: string, messages: Message[], files: Record<string, string>, publishedSlug?: string | null) => void
   reset: () => void
 }
 
@@ -36,6 +38,7 @@ export const useBuilderStore = create<BuilderState>((set) => ({
   credits: null,
   projectId: null,
   projectTitle: '',
+  publishedSlug: null,
 
   addMessage: (msg) =>
     set((state) => ({ messages: [...state.messages, msg] })),
@@ -64,7 +67,9 @@ export const useBuilderStore = create<BuilderState>((set) => ({
 
   setProjectTitle: (title) => set({ projectTitle: title }),
 
-  loadProject: (id, title, messages, files) =>
+  setPublishedSlug: (slug) => set({ publishedSlug: slug }),
+
+  loadProject: (id, title, messages, files, publishedSlug) =>
     set({
       projectId: id,
       projectTitle: title,
@@ -73,6 +78,7 @@ export const useBuilderStore = create<BuilderState>((set) => ({
       activeFile: 'index.html',
       isGenerating: false,
       prompt: '',
+      publishedSlug: publishedSlug || null,
     }),
 
   reset: () =>
@@ -84,5 +90,6 @@ export const useBuilderStore = create<BuilderState>((set) => ({
       prompt: '',
       projectId: null,
       projectTitle: '',
+      publishedSlug: null,
     }),
 }))

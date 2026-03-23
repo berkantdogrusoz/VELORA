@@ -6,22 +6,57 @@ import { TabBar } from './TabBar'
 import { CodeEditor } from './CodeEditor'
 import { Globe, Loader2 } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n/i18n-context'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+
+function injectNavigationInterceptor(html: string): string {
+  const script = `<script>
+    document.addEventListener('click', function(e) {
+      var a = e.target.closest('a');
+      if (a) {
+        var href = a.getAttribute('href');
+        if (href && href.endsWith('.html') && !href.startsWith('http')) {
+          e.preventDefault();
+          window.parent.postMessage({ type: 'elannoire-navigate', page: href }, '*');
+        }
+      }
+    });
+  </script>`
+  if (html.includes('</body>')) {
+    return html.replace('</body>', script + '</body>')
+  }
+  return html + script
+}
 
 export function PreviewPanel() {
   const { files, isGenerating } = useBuilderStore()
-  const { activeTab, deviceView } = useUIStore()
+  const { activeTab, deviceView, previewFile, setPreviewFile } = useUIStore()
   const { t } = useTranslation()
-  const html = files['index.html'] || ''
-  const hasContent = html.length > 0
+  const html = files[previewFile] || files['index.html'] || ''
+  const hasContent = Object.keys(files).length > 0
   const [previewHtml, setPreviewHtml] = useState('')
 
   // Only update preview when generation completes — zero flicker
   useEffect(() => {
     if (!isGenerating && html) {
-      setPreviewHtml(html)
+      setPreviewHtml(injectNavigationInterceptor(html))
     }
   }, [isGenerating, html])
+
+  // Listen for navigation messages from the iframe
+  const handleMessage = useCallback((e: MessageEvent) => {
+    if (e.data?.type === 'elannoire-navigate' && e.data.page) {
+      const page = e.data.page as string
+      // Check if the target page exists in files
+      if (files[page]) {
+        setPreviewFile(page)
+      }
+    }
+  }, [files, setPreviewFile])
+
+  useEffect(() => {
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [handleMessage])
 
   const showPreview = previewHtml.length > 0
 
@@ -33,7 +68,7 @@ export function PreviewPanel() {
           showPreview && !isGenerating ? (
             <div className="w-full h-full flex items-start justify-center bg-obsidian overflow-auto p-0">
               <iframe
-                key="preview-iframe"
+                key={`preview-${previewFile}`}
                 srcDoc={previewHtml}
                 sandbox="allow-scripts allow-same-origin"
                 className={`h-full border-0 bg-white transition-all duration-300 ${

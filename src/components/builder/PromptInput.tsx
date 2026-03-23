@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Send, Loader2 } from 'lucide-react'
 import { useBuilderStore } from '@/store/builder-store'
-import { parsePartialVeloraFile, parseVeloraFiles } from '@/lib/ai/stream-parser'
+import { parseAllPartialVeloraFiles, parseVeloraFiles } from '@/lib/ai/stream-parser'
 import { toast } from 'sonner'
 import { useTranslation } from '@/lib/i18n/i18n-context'
 
@@ -56,7 +56,7 @@ export function PromptInput() {
     }
 
     try {
-      const currentCode = files['index.html'] || undefined
+      const currentFiles = Object.keys(files).length > 0 ? files : undefined
 
       // Timeout after 90 seconds
       const controller = new AbortController()
@@ -70,7 +70,7 @@ export function PromptInput() {
             role: m.role,
             content: m.content,
           })),
-          currentCode,
+          currentFiles,
         }),
         signal: controller.signal,
       })
@@ -107,10 +107,10 @@ export function PromptInput() {
         const chunk = decoder.decode(value, { stream: true })
         fullText += chunk
 
-        // Try to parse and update preview progressively
-        const parsed = parsePartialVeloraFile(fullText)
-        if (parsed) {
-          setFiles({ [parsed.name]: parsed.content })
+        // Try to parse and update preview progressively (supports multiple files)
+        const partialFiles = parseAllPartialVeloraFiles(fullText)
+        if (Object.keys(partialFiles).length > 0) {
+          setFiles(partialFiles)
         }
       }
 
