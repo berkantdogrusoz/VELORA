@@ -10,17 +10,47 @@ import { useState, useEffect, useCallback } from 'react'
 
 function injectNavigationInterceptor(html: string): string {
   const script = `<script>
-    document.addEventListener('click', function(e) {
-      var a = e.target.closest('a');
-      if (a) {
+    (function() {
+      // Block ALL link navigation inside the preview iframe
+      document.addEventListener('click', function(e) {
+        var a = e.target.closest('a');
+        if (!a) return;
+
         var href = a.getAttribute('href');
-        if (href && href.endsWith('.html') && !href.startsWith('http')) {
-          e.preventDefault();
-          window.parent.postMessage({ type: 'elannoire-navigate', page: href }, '*');
+        if (!href) return;
+
+        // Always prevent default first
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Allow anchor links (scroll within page)
+        if (href.startsWith('#')) {
+          var target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+          return;
         }
-      }
-    });
-  </script>`
+
+        // Internal .html page navigation — tell parent to switch file
+        if (href.endsWith('.html') && !href.startsWith('http')) {
+          window.parent.postMessage({ type: 'elannoire-navigate', page: href }, '*');
+          return;
+        }
+
+        // Block everything else (absolute URLs, etc.)
+      }, true);
+
+      // Block form submissions
+      document.addEventListener('submit', function(e) {
+        e.preventDefault();
+      }, true);
+
+      // Block window.location changes
+      Object.defineProperty(window, 'location', {
+        configurable: false,
+        get: function() { return document.location; }
+      });
+    })();
+  <\/script>`
   if (html.includes('</body>')) {
     return html.replace('</body>', script + '</body>')
   }
@@ -70,7 +100,7 @@ export function PreviewPanel() {
               <iframe
                 key={`preview-${previewFile}`}
                 srcDoc={previewHtml}
-                sandbox="allow-scripts"
+                sandbox="allow-scripts allow-same-origin"
                 className={`h-full border-0 bg-white transition-all duration-300 ${
                   deviceView === 'desktop'
                     ? 'w-full'
