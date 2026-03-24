@@ -1,6 +1,7 @@
 'use client'
 
-import { Eye, Code2, Monitor, Tablet, Smartphone } from 'lucide-react'
+import { Eye, Code2, Monitor, Tablet, Smartphone, ExternalLink } from 'lucide-react'
+import { useCallback } from 'react'
 import { useUIStore } from '@/store/ui-store'
 import { useBuilderStore } from '@/store/builder-store'
 
@@ -8,7 +9,53 @@ export function TabBar() {
   const { activeTab, setActiveTab, deviceView, setDeviceView, previewFile, setPreviewFile } = useUIStore()
   const { files, activeFile, setActiveFile } = useBuilderStore()
   const fileNames = Object.keys(files)
+  const hasFiles = fileNames.length > 0
   const hasMultipleFiles = fileNames.length > 1
+
+  const openInNewTab = useCallback(() => {
+    if (!hasFiles) return
+
+    const currentHtml = files[previewFile] || files['index.html'] || ''
+    if (!currentHtml) return
+
+    // Build a full HTML document with navigation support for multi-page sites
+    let finalHtml = currentHtml
+
+    if (hasMultipleFiles) {
+      // Inject a script that intercepts .html link clicks and loads them from our files map
+      const filesJson = JSON.stringify(files)
+      const navScript = `<script>
+        (function() {
+          var files = ${filesJson};
+          document.addEventListener('click', function(e) {
+            var a = e.target.closest('a');
+            if (a) {
+              var href = a.getAttribute('href');
+              if (href && href.endsWith('.html') && !href.startsWith('http') && files[href]) {
+                e.preventDefault();
+                document.open();
+                document.write(files[href]);
+                document.close();
+                window.scrollTo(0, 0);
+              }
+            }
+          });
+        })();
+      <\/script>`
+
+      if (finalHtml.includes('</body>')) {
+        finalHtml = finalHtml.replace('</body>', navScript + '</body>')
+      } else {
+        finalHtml += navScript
+      }
+    }
+
+    const blob = new Blob([finalHtml], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank')
+    // Clean up blob URL after a delay
+    setTimeout(() => URL.revokeObjectURL(url), 60000)
+  }, [files, previewFile, hasFiles, hasMultipleFiles])
 
   return (
     <div className="shrink-0">
@@ -47,6 +94,20 @@ export function TabBar() {
               onClick={() => setDeviceView('mobile')}
               icon={<Smartphone className="w-3.5 h-3.5" />}
             />
+
+            {/* Open in new tab */}
+            {hasFiles && (
+              <>
+                <div className="w-px h-4 bg-gold/[0.1] mx-1" />
+                <button
+                  onClick={openInNewTab}
+                  title="Open in new tab"
+                  className="p-1.5 rounded-md transition-colors text-gold-muted/30 hover:text-gold/60 hover:bg-gold/[0.08]"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
