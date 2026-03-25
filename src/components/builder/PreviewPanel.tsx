@@ -11,46 +11,26 @@ import { useState, useEffect, useCallback } from 'react'
 function injectNavigationInterceptor(html: string): string {
   const script = `<script>
     (function() {
-      // Block ALL link navigation inside the preview iframe
       document.addEventListener('click', function(e) {
         var a = e.target.closest('a');
         if (!a) return;
-
         var href = a.getAttribute('href');
         if (!href) return;
-
-        // Always prevent default first
         e.preventDefault();
         e.stopPropagation();
-
-        // Allow anchor links (scroll within page)
         if (href.startsWith('#')) {
           var target = document.querySelector(href);
           if (target) target.scrollIntoView({ behavior: 'smooth' });
           return;
         }
-
-        // Internal .html page navigation — tell parent to switch file
         if (href.endsWith('.html') && !href.startsWith('http')) {
           window.parent.postMessage({ type: 'elannoire-navigate', page: href }, '*');
           return;
         }
-
-        // Block everything else (absolute URLs, etc.)
       }, true);
-
-      // Block form submissions
-      document.addEventListener('submit', function(e) {
-        e.preventDefault();
-      }, true);
-
-      // Block window.location changes
-      Object.defineProperty(window, 'location', {
-        configurable: false,
-        get: function() { return document.location; }
-      });
+      document.addEventListener('submit', function(e) { e.preventDefault(); }, true);
     })();
-  <\/script>`
+  </script>`
   if (html.includes('</body>')) {
     return html.replace('</body>', script + '</body>')
   }
@@ -65,10 +45,14 @@ export function PreviewPanel() {
   const hasContent = Object.keys(files).length > 0
   const [previewHtml, setPreviewHtml] = useState('')
 
-  // Only update preview when generation completes — zero flicker
+  // Update preview when generation completes or when html changes (project load)
   useEffect(() => {
-    if (!isGenerating && html) {
-      setPreviewHtml(injectNavigationInterceptor(html))
+    if (!isGenerating) {
+      if (html) {
+        setPreviewHtml(injectNavigationInterceptor(html))
+      } else {
+        setPreviewHtml('')
+      }
     }
   }, [isGenerating, html])
 

@@ -91,8 +91,8 @@ export async function POST(request: Request) {
     const data = await response.json()
 
     if (!response.ok) {
-      console.error('Lemon Squeezy error:', JSON.stringify(data, null, 2))
-      const detail = data?.errors?.[0]?.detail || 'Failed to create checkout'
+      console.error('Lemon Squeezy error:', response.status, JSON.stringify(data, null, 2))
+      const detail = data?.errors?.[0]?.detail || data?.errors?.[0]?.title || `Lemon Squeezy API error (${response.status})`
       return Response.json({ error: detail }, { status: 500 })
     }
 
