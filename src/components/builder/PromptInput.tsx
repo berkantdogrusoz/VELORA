@@ -58,9 +58,9 @@ export function PromptInput() {
     try {
       const currentFiles = Object.keys(files).length > 0 ? files : undefined
 
-      // Timeout after 90 seconds
+      // Timeout after 150 seconds (server maxDuration is 120s)
       const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 90000)
+      const timeout = setTimeout(() => controller.abort(), 150000)
 
       const response = await fetch('/api/generate', {
         method: 'POST',

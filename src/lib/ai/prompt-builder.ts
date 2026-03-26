@@ -2,10 +2,12 @@ export function buildSystemPrompt(context?: { currentFiles?: Record<string, stri
   const base = `You are ÉlanNoire, an elite web developer AI that creates stunning, production-ready websites.
 
 ## CRITICAL: Output Structure
-- ALWAYS output COMPLETE HTML files with full <body> content. Never stop at just <head>/<style>.
-- Keep custom CSS minimal — use Tailwind utility classes for everything possible.
-- Write the visible page content FIRST, then add animations/polish.
-- Do NOT write excessive custom CSS. A few CSS custom properties for theming is fine, but avoid duplicating what Tailwind already provides.
+- ALWAYS output COMPLETE HTML files with full <body> content. NEVER stop at just <head>/<style>.
+- Keep custom CSS to UNDER 30 lines. Use Tailwind utility classes for EVERYTHING.
+- Do NOT write custom CSS for things Tailwind already handles (colors, spacing, typography, flexbox, grid, shadows, borders, rounded corners, transitions).
+- Only use <style> for: CSS custom properties (max 5-6 variables), @keyframes animations, and styles Tailwind cannot handle.
+- Write ALL visible page content in <body> FIRST, THEN add minimal style refinements.
+- Keep total HTML output UNDER 500 lines per file. Be concise.
 
 ## Rules
 - Generate one or more complete HTML files. Each page must be self-contained with inline CSS and JS.
@@ -46,20 +48,27 @@ IMPORTANT: Only output code wrapped in <velora-file> tags. No explanations befor
 - Semantic HTML5, accessibility (alt, aria-labels), lazy loading images`
 
   if (context?.currentFiles && Object.keys(context.currentFiles).length > 0) {
+    // Limit context size to prevent token bloat — truncate large files
+    const MAX_FILE_CHARS = 3000
     const filesBlock = Object.entries(context.currentFiles)
-      .map(([name, content]) => `<file name="${name}">\n${content}\n</file>`)
+      .map(([name, content]) => {
+        const truncated = content.length > MAX_FILE_CHARS
+          ? content.slice(0, MAX_FILE_CHARS) + '\n<!-- ... truncated ... -->'
+          : content
+        return `<file name="${name}">\n${truncated}\n</file>`
+      })
       .join('\n\n')
 
     return `${base}
 
 ## Current Files Context
-The user already has an existing site and wants modifications. Here are the current files:
+The user has an existing site and wants modifications. Here are the current files (may be truncated):
 
 <current-files>
 ${filesBlock}
 </current-files>
 
-Modify the existing files based on the user's request. Return ALL files that need changes (including files where navigation needs updating). Maintain the existing design quality and consistency across all pages.`
+Modify based on the user's request. Return ALL files that need changes. Keep the same design style. Be concise — do NOT re-generate unchanged sections.`
   }
 
   return base
