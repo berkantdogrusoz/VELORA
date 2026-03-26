@@ -4,7 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { buildSystemPrompt } from '@/lib/ai/prompt-builder'
 import { deductCredit, logGeneration, getOrCreateUser } from '@/lib/db/credits'
 
-export const maxDuration = 60
+export const maxDuration = 120
 
 export async function POST(request: Request) {
   try {

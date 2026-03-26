@@ -118,6 +118,14 @@ export function PromptInput() {
       const finalFiles = parseVeloraFiles(fullText)
       if (Object.keys(finalFiles).length > 0) {
         setFiles(finalFiles)
+
+        // Check for truncated HTML — missing </html> means generation was cut off
+        const mainFile = finalFiles['index.html'] || Object.values(finalFiles)[0]
+        if (mainFile && !mainFile.includes('</html>')) {
+          toast.warning('Site generation was incomplete. Try a shorter or simpler prompt.', {
+            duration: 6000,
+          })
+        }
       } else if (fullText.trim()) {
         // AI responded but didn't use velora-file tags — show the raw response
         console.warn('AI response did not contain <velora-file> tags:', fullText.substring(0, 200))
